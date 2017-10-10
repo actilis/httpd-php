@@ -1,5 +1,8 @@
 FROM  actilis/centos7-base
-MAINTAINER fmicaux@actilis.net
+
+MAINTAINER Francois MICAUX <dok-images@actilis.net> LABEL Vendor="Actilis" \
+      License=GPLv2 \
+      Version=2017.10
 
 # Installation Apache + PHP + modules de PHP nécessaires
 RUN yum -y install httpd24u php70u git \
