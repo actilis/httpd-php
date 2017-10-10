@@ -1,6 +1,8 @@
 FROM  actilis/centos7-base
 
-MAINTAINER Francois MICAUX <dok-images@actilis.net> LABEL Vendor="Actilis" \
+MAINTAINER Francois MICAUX <dok-images@actilis.net> 
+
+LABEL Vendor="Actilis" \
       License=GPLv2 \
       Version=2017.10
 
