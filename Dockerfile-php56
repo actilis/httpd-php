@@ -7,9 +7,9 @@ LABEL Vendor="Actilis" \
       Version=2017.10
 
 # Installation Apache + PHP + modules de PHP nécessaires
-RUN yum -y install httpd24u php70u git \
+RUN yum -y install httpd24u php56u git \
                    httpd24u-mod_ssl \
-                   php70u-{mysqlnd,ldap,imap,curl,gd,mcrypt,mbstring,json,intl,pear} \
+                   php56u-{mysqlnd,ldap,imap,curl,gd,mcrypt,mbstring,json,intl,pear} \
  && yum -y install composer \
  && yum clean all && rm -rf /var/cache/yum
 
