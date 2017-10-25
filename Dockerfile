@@ -15,7 +15,9 @@ RUN yum -y install httpd24u php70u git \
 
 
 # IP Addr en accueil par défaut 
-RUN rm -f /var/www/html/index.html && echo "<?php  printf("My IP is %s\n", $_SERVER["SERVER_ADDR"]); ?> " > /var/www/html/index.php
+RUN \
+ && rm -f /var/www/html/index.html \
+ && echo '<?php  printf("My IP is %s\n", $_SERVER["SERVER_ADDR"]); ?> ' > /var/www/html/index.php
 
 # Données à importer (ADD, COPY,...)
 COPY files/  /
