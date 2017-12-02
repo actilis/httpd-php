@@ -1,18 +1,19 @@
-FROM  actilis/centos7-base
+FROM  fedora:latest
 
 MAINTAINER Francois MICAUX <dok-images@actilis.net> 
 
 LABEL Vendor="Actilis" \
       License=GPLv3 \
-      Version=2017.11
+      Version=2017.12
 
 # Installation Apache + PHP + modules de PHP nécessaires
-RUN yum clean all && yum -y repolist \
- && yum -y install httpd24u php70u-fpm git \
-                   httpd24u-mod_ssl \
-                   php70u-{mysqlnd,ldap,imap,curl,gd,mcrypt,mbstring,json,intl,pear} \
-		   supervisor \
- && yum clean all && rm -rf /var/cache/yum
+RUN dnf clean all 
+RUN dnf -y repolist \
+ && dnf -y install \
+        httpd php-fpm git \
+        php-{mysqlnd,ldap,imap,curl,gd,mcrypt,mbstring,json,intl,pear} composer \
+        supervisor procps \
+ && dnf clean all 
 
 # Données à importer (ADD, COPY,...)
 COPY files/  /
