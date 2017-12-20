@@ -4,7 +4,7 @@ MAINTAINER Francois MICAUX <dok-images@actilis.net>
 
 LABEL Vendor="Actilis" \
       License=GPLv3 \
-      Version=2017.12
+      Version=2017.12.20
 
 # Installation Apache + PHP + modules de PHP nécessaires
 RUN dnf clean all 

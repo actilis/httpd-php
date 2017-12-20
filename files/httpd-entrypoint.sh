@@ -10,6 +10,7 @@ export MPM_MINSPARE=${MPM_MINSPARE:-5}
 export MPM_MAXSPARE=${MPM_MAXSPARE:-10}
 export MPM_MAXWORKERS=${MPM_MAXWORKERS:-150}
 export MPM_MAXCONNECTIONS=${MPM_MAXCONNECTIONS:-0}
+
 # TODO : Apply MPM conf in 00-mpm.conf to fit variables.
 
 
