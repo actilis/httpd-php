@@ -1,10 +1,9 @@
 FROM  fedora:latest
 
-MAINTAINER Francois MICAUX <dok-images@actilis.net> 
-
 LABEL Vendor="Actilis" \
+      Maintener="Francois MICAUX <dok-images@actilis.net>" \
       License=GPLv3 \
-      Version=2017.12.20
+      Version=2018.01.31
 
 # Installation Apache + PHP + modules de PHP nécessaires
 RUN dnf clean all 
@@ -29,5 +28,4 @@ EXPOSE 80
 
 # Définition de l'entrypoint (ou CMD pendant les tests...)
 CMD ["/httpd-entrypoint.sh"]
-
 
