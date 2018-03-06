@@ -1,1 +1,3 @@
-<?php  printf("My IP is %s\n", $_SERVER["SERVER_ADDR"]); ?>
+<?php  
+  printf("Hostname: %s, IP: %s\n", gethostname(), exec('hostname -I')); 
+?>

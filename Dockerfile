@@ -3,7 +3,7 @@ FROM  fedora:latest
 LABEL Vendor="Actilis" \
       Maintener="Francois MICAUX <dok-images@actilis.net>" \
       License=GPLv3 \
-      Version=2018.01.31
+      Version=2018.03
 
 # Installation Apache + PHP + modules de PHP nécessaires
 RUN dnf clean all 
