@@ -9,13 +9,12 @@ LABEL Vendor="Actilis" \
 RUN apk add --no-cache \
 	bash \
         apache2 apache2-proxy apache2-utils \
-	git \
 	php7-fpm \
         php7-mysqlnd php7-ldap \
 	php7-imap php7-curl \
 	php7-gd php7-mcrypt php7-mbstring php7-json php7-intl \
 	php7-pear php7-phar \
-        supervisor procps 
+        supervisor
 
 # Install Composer
 RUN  php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
