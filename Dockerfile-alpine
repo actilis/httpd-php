@@ -1,0 +1,42 @@
+FROM  alpine:3.7
+
+LABEL Vendor="Actilis" \
+      Maintener="Francois MICAUX <dok-images@actilis.net>" \
+      License=GPLv3 \
+      Version=2018.05
+
+# Installation Apache + PHP + modules de PHP nécessaires
+RUN apk add --no-cache \
+	bash \
+        apache2 apache2-proxy apache2-utils \
+	git \
+	php7-fpm \
+        php7-mysqlnd php7-ldap \
+	php7-imap php7-curl \
+	php7-gd php7-mcrypt php7-mbstring php7-json php7-intl \
+	php7-pear php7-phar \
+        supervisor procps 
+
+# Install Composer
+RUN  php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+ &&  php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
+ && php composer-setup.php \
+ && php -r "unlink('composer-setup.php');" \
+ && mv /composer.phar /usr/local/bin/composer
+
+# Données à importer (ADD, COPY,...)
+COPY files/  /
+
+# Manage permisisons, clean...
+RUN rm -f /etc/httpd/conf.d/welcome.conf \
+ && chmod  o+x /var /var/www \
+ && chown -R apache.apache /var/www/html \
+ && chmod -R 750 /var/www/html 
+
+# Ports ?
+EXPOSE 80
+
+# Définition de l'entrypoint (ou CMD pendant les tests...)
+ENTRYPOINT ["/httpd-entrypoint.sh"]
+CMD ["/usr/bin/supervisord","-c","/etc/supervisord.conf"]
+
