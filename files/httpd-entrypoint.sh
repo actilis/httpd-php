@@ -39,5 +39,6 @@ export MPM_MAXCONNECTIONS=${MPM_MAXCONNECTIONS:-0}
 # For PID-file
 mkdir -p /run/apache2
 
-# Do it !
-exec "$@"
+# Entrypoint : supervisor for httpd + php-fpm
+/usr/bin/supervisord   -c   /etc/supervisord.conf
+

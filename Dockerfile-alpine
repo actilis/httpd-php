@@ -9,7 +9,7 @@ LABEL Vendor="Actilis" \
 RUN apk add --no-cache \
 	bash \
         apache2 apache2-proxy apache2-utils \
-	php7-fpm \
+	php7-fpm php7-session \
         supervisor
 
 # Données à importer (ADD, COPY,...)
@@ -26,5 +26,3 @@ EXPOSE 80
 
 # Définition de l'entrypoint (ou CMD pendant les tests...)
 ENTRYPOINT ["/httpd-entrypoint.sh"]
-CMD ["/usr/bin/supervisord","-c","/etc/supervisord.conf"]
-
