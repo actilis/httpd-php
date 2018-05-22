@@ -3,26 +3,22 @@ FROM  alpine:edge
 LABEL Vendor="Actilis" \
       Maintener="Francois MICAUX <dok-images@actilis.net>" \
       License=GPLv3 \
-      Version=2018.05-alpine
+      Version=2018.05-alpine-phpfpm
 
 # Installation Apache + PHP + modules de PHP nécessaires
-RUN apk add --no-cache \
-	bash \
-        apache2 apache2-proxy apache2-utils \
-	php7-fpm php7-session \
-        supervisor
+RUN apk add --no-cache bash apache2-proxy apache2-utils php7-fpm php7-session supervisor
 
 # Données à importer (ADD, COPY,...)
 COPY files/  /
 
 # Manage permisisons, clean...
-RUN rm -f /etc/httpd/conf.d/welcome.conf \
- && chmod  o+x /var /var/www \
+RUN chmod o+x /var /var/www \
  && chown -R apache.apache /var/www/html \
- && chmod -R 750 /var/www/html 
+ && chmod -R 755 /var/www/html 
 
-# Ports ?
+# Ports & Volumes ?
 EXPOSE 80
+VOLUME /var/www/html
 
-# Définition de l'entrypoint (ou CMD pendant les tests...)
+# Entrypoint does the HTTPD configuration
 ENTRYPOINT ["/httpd-entrypoint.sh"]

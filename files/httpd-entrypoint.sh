@@ -1,44 +1,41 @@
 #!/bin/bash
 
-# prefork / worker / event
-MPM=${HTTPD_MPM:=event}
+sed -i -e '/LoadModule mpm_event/s/^#//' -e '/LoadModule mpm_prefork/s/^/#/' -e '/LoadModule slotmem_shm_module/s/^#//' /etc/apache2/httpd.conf
 
-# On RH/CentOS/Fedora
-if which rpm >/dev/null 2>/dev/null ; then
-	CONF_DIR=/etc/httpd/conf.d
-	echo "LoadModule mpm_${MPM}_module modules/mod_mpm_${MPM}.so"  > /etc/httpd/conf.modules.d/00-mpm.conf
-fi
+sed -i -e '/^LoadModule/s/^/#/' -e '/proxy_module/s/^#//' -e '/proxy_fcgi_module/s/^#//' /etc/apache2/conf.d/proxy.conf
 
-# Alpine
-if which apk &>/dev/null ; then
-	CONF_DIR=/etc/apache2/conf.d
-	sed -i -e '/LoadModule mpm_event/s/^#//' \
-	       -e '/LoadModule mpm_prefork/s/^/#/' \
-		/etc/apache2/httpd.conf
+echo -e "\nProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://127.0.0.1:9000/var/www/localhost/htdocs/\$1\nDirectoryIndex index.php"  > /etc/apache2/conf.d/php.conf
 
-	# Move files copied by Dockerfile in a RH/CentOS place to the right Alpine place
-	mv /etc/php-fpm.d/* /etc/php7/php-fpm.d && rm -rf /etc/php-fpm.d
-	mv /etc/httpd/conf.d/* /etc/apache2/conf.d/ && rm -rf /etc/httpd
-	# mod_proxy_fcgi uniquement
-	sed -i -e '/^LoadModule/s/^/#/' \
-               -e '/proxy_module/s/^#//' \
-               -e '/proxy_fcgi_module/s/^#//' \
-	        /etc/apache2/conf.d/proxy.conf
-	install -d -o apache -g apache -m 700 /var/log/httpd
-fi
+# Move DocumentRoot to /var/www/html
+sed -i -e 's,/var/www/localhost/htdocs,/var/www/html,' /etc/apache2/httpd.conf /etc/apache2/conf.d/php.conf
 
-# Apache MPM Tuning defaults 
-export MPM_START=${MPM_START:-5}
-export MPM_MINSPARE=${MPM_MINSPARE:-5}
-export MPM_MAXSPARE=${MPM_MAXSPARE:-10}
-export MPM_MAXWORKERS=${MPM_MAXWORKERS:-150}
-export MPM_MAXCONNECTIONS=${MPM_MAXCONNECTIONS:-0}
+mkdir -p /run/php-fpm /run/apache2
+cat <<DONE > /etc/supervisord.conf
+[supervisord]
+user=root
+nodaemon=true              ; (start in foreground if true;default false)
+logfile=/var/log/supervisord.log  ; (main log file;default $CWD/supervisord.log)
+logfile_maxbytes=50MB       ; (max main logfile bytes b4 rotation;default 50MB)
+logfile_backups=10          ; (num of main logfile rotation backups;default 10)
+loglevel=info               ; (log level;default info; others: debug,warn,trace)
+pidfile=/var/run/supervisord.pid ; (supervisord pidfile;default supervisord.pid)
+;minfds=1024                 ; (min. avail startup file descriptors;default 1024)
+;minprocs=200                ; (min. avail process descriptors;default 200)
+;umask=022                  ; (process file creation umask;default 022)
+;user=chrism                 ; (default is current user, required if root)
+;identifier=supervisor       ; (supervisord identifier, default is 'supervisor')
+;directory=/tmp              ; (default is not to cd during start)
+;nocleanup=true              ; (don't clean up tempfiles at start;default false)
+;childlogdir=/tmp            ; ('AUTO' child log dir, default $TEMP)
+;environment=KEY=value       ; (key value pairs to add to environment)
+;strip_ansi=false            ; (strip ansi escape codes in logs; def. false)
 
-# TODO : Apply MPM conf in 00-mpm.conf to fit variables.
+[program:httpd]
+command=/usr/sbin/httpd -DFOREGROUND
 
-# For PID-file
-mkdir -p /run/apache2
+[program:phpfpm]
+command=/usr/sbin/php-fpm7 -F
+DONE
 
-# Entrypoint : supervisor for httpd + php-fpm
-/usr/bin/supervisord   -c   /etc/supervisord.conf
+exec /usr/bin/supervisord   -c   /etc/supervisord.conf
 
