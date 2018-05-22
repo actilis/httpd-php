@@ -16,9 +16,8 @@ RUN chmod o+x /var /var/www \
  && chown -R apache.apache /var/www/html \
  && chmod -R 755 /var/www/html 
 
-# Ports & Volumes ?
+# Ports 
 EXPOSE 80
-VOLUME /var/www/html
 
 # Entrypoint does the HTTPD configuration
 ENTRYPOINT ["/httpd-entrypoint.sh"]
