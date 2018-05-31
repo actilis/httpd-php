@@ -3,7 +3,7 @@ FROM  alpine:3.7
 LABEL Vendor="Actilis" \
       Maintener="Francois MICAUX <dok-images@actilis.net>" \
       License=GPLv3 \
-      Version=2018.05-alpine-phpfpm
+      Version=2018.06-alpine-phpfpm
 
 # Installation Apache + PHP + modules de PHP nécessaires
 RUN apk add --no-cache bash apache2-proxy apache2-utils php7-fpm php7-session supervisor
