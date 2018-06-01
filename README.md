@@ -1,6 +1,6 @@
 # httpd-php
 
-Now based on Alpine Linux.
+Now based on Alpine Linux or Debian.
 
 Port : tcp/80
 Volume : /var/www/html (DocumentRoot)
@@ -8,18 +8,23 @@ Volume : /var/www/html (DocumentRoot)
 ## Content owners
 
 Warning : 
-- for Alpine image : owner of /var/www/html is "apache:apache"
-- for Debian image : owner of /var/www/html is "www-data:www-data"
+- for Alpine image : /var/www/html is owned by "apache:apache"
+- for Debian image : /var/www/html is owned by "www-data:www-data"
 
 ## Alpine Image
 
-Based on Alpine:3.7 with packages installed via apk.
+Based on Alpine:3.7 with packages installed via apk. 
+
+This image is as light as possible.
+
 
 ## Debian Image
 
 Debian image includes "composer".
 
 Debian image is based on php:7.2-apache (mod_php as a Handler).
+
+This image is to be used for some apps.
 
 PHP Extensions :
 ```

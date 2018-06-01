@@ -3,7 +3,7 @@ FROM  php:7.2-apache
 LABEL Vendor="Actilis" \
       Maintener="Francois MICAUX <dok-images@actilis.net>" \
       License=GPLv3 \
-      Version=2018.05-alpine-phpfpm
+      Version=2018.06-alpine-phpfpm
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install \
     git  \
