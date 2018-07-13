@@ -16,7 +16,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
  && docker-php-ext-configure imap --with-kerberos --with-imap-ssl && docker-php-ext-install imap \
  && docker-php-ext-configure intl && docker-php-ext-install intl \
  && docker-php-ext-configure zip --with-libzip && docker-php-ext-install mbstring zip gd \
- && docker-php-ext-install pdo_mysql \
+ && docker-php-ext-install pdo_mysql mysqlnd \
  && docker-php-ext-install ldap \
  && rm -r /var/lib/apt/lists/
 

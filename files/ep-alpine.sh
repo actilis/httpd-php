@@ -37,5 +37,5 @@ command=/usr/sbin/httpd -DFOREGROUND
 command=/usr/sbin/php-fpm7 -F
 DONE
 
-exec /usr/bin/supervisord   -c   /etc/supervisord.conf
+exec "$@"
 
