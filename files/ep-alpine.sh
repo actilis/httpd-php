@@ -37,5 +37,10 @@ command=/usr/sbin/httpd -DFOREGROUND
 command=/usr/sbin/php-fpm7 -F
 DONE
 
+# Manage permisisons, clean...
+chmod o+x /var /var/www \
+&& chown -R apache.apache /var/www/html \
+&& chmod -R 755 /var/www/html
+
 exec "$@"
 

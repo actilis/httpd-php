@@ -1,9 +1,9 @@
-FROM  alpine:3.7
+FROM  alpine:3.8
 
 LABEL Vendor="Actilis" \
       Maintener="Francois MICAUX <dok-images@actilis.net>" \
       License=GPLv3 \
-      Version=2018.06-alpine-phpfpm
+      Version=2018.09-alpine-phpfpm
 
 # Installation Apache + PHP + modules de PHP nécessaires
 RUN apk add --no-cache bash apache2-proxy apache2-utils php7-fpm php7-session supervisor
@@ -13,9 +13,9 @@ COPY files/var  /var
 COPY files/ep-alpine.sh /httpd-entrypoint.sh  
 
 # Manage permisisons, clean...
-RUN chmod o+x /var /var/www \
- && chown -R apache.apache /var/www/html \
- && chmod -R 755 /var/www/html 
+# RUN chmod o+x /var /var/www \
+# && chown -R apache.apache /var/www/html \
+# && chmod -R 755 /var/www/html 
 
 # Ports 
 EXPOSE 80
