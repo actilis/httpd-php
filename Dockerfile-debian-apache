@@ -3,7 +3,7 @@ FROM  php:7.2-apache
 LABEL Vendor="Actilis" \
       Maintener="Francois MICAUX <dok-images@actilis.net>" \
       License=GPLv3 \
-      Version=2018.06-alpine-phpfpm
+      Version=2018.09-debian-phpfpm
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install \
     git  \
@@ -36,6 +36,9 @@ COPY files/var  /var
 RUN chmod o+x /var /var/www \
  && chown -R www-data.www-data /var/www/html \
  && chmod -R 755 /var/www/html 
+
+# Enable apache2-modules
+RUN a2enmod rewrite
 
 # Use EP from origin image
 # ========================
