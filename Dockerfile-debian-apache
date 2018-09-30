@@ -7,12 +7,28 @@ RUN set -ex; \
 	\
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
-		libjpeg-dev \
-		libpng-dev \
+		libjpeg-dev libpng-dev \
+                libfreetype6-dev libjpeg62-turbo-dev zlib1g-dev libzip-dev libldap-dev libicu-dev \
+		libssl-dev libc-client-dev libkrb5-dev \
+		git \
+		curl \
+		unzip \
 	; \
 	\
 	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
-	docker-php-ext-install gd mysqli opcache zip; \
+        docker-php-ext-configure zip --with-libzip; \
+	docker-php-ext-install mbstring zip gd; \
+	docker-php-ext-install ldap mysqli pdo_mysql opcache zip; \
+        docker-php-ext-configure imap --with-kerberos --with-imap-ssl; \
+	docker-php-ext-install imap; \
+        docker-php-ext-configure intl; \
+	docker-php-ext-install intl; \
+        \
+        php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"; \
+ 	php -r "if (hash_file('SHA384', 'composer-setup.php') === '93b54496392c062774670ac18b134c3b3a95e5a5e5c8f1a9f115f203b75bf9a129d5daa8ba6a13e2cc8a1da0806388a8') { echo     'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"; \
+ 	php composer-setup.php; \
+ 	php -r "unlink('composer-setup.php');"; \
+ 	mv composer.phar /usr/local/bin/composer; \
 	\
 # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
 	apt-mark auto '.*' > /dev/null; \
@@ -26,7 +42,7 @@ RUN set -ex; \
 		| xargs -rt apt-mark manual; \
 	\
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-	rm -rf /var/lib/apt/lists/*
+	rm -rf /var/lib/apt/lists/;
 
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
@@ -41,9 +57,17 @@ RUN { \
 
 RUN a2enmod rewrite expires
 
-VOLUME /var/www/html
 
+
+# Manage files, permisisons, clean...
+COPY files/var  /var
 COPY files/ep-php.sh /usr/local/bin/docker-entrypoint.sh
+
+RUN chmod o+x /var /var/www \
+ && chown -R www-data.www-data /var/www/html \
+ && chmod -R 755 /var/www/html
+
+VOLUME /var/www/html
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["apache2-foreground"]
