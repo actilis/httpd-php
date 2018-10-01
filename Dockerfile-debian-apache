@@ -49,9 +49,6 @@ RUN { \
 		echo 'opcache.enable_cli=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
-RUN a2enmod rewrite expires
-
-
 
 # Manage files, permisisons, clean...
 COPY files/var  /var
