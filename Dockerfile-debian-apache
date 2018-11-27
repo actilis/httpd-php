@@ -10,7 +10,6 @@ RUN set -ex; \
 		libjpeg-dev libpng-dev \
                 libfreetype6-dev libjpeg62-turbo-dev zlib1g-dev libzip-dev libldap-dev libicu-dev \
 		libssl-dev libc-client-dev libkrb5-dev \
-		git \
 		curl \
 		unzip \
 	; \
@@ -36,6 +35,7 @@ RUN set -ex; \
 		| xargs -rt apt-mark manual; \
 	\
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+	apt-get -y install git;\
 	rm -rf /var/lib/apt/lists/;
 
 # install the PHP extensions we need
@@ -67,7 +67,7 @@ RUN chmod o+x /var /var/www \
  && chown -R www-data.www-data /var/www/html \
  && chmod -R 755 /var/www/html
 
-VOLUME /var/www/html
+#VOLUME /var/www/html
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["apache2-foreground"]
